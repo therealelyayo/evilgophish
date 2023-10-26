@@ -29,4 +29,4 @@ replace_env "${RID_REPLACEMENT}" "RID_REPLACEMENT"
 replace_env "${BL_BOOL}" "BL_BOOL"
 
 # Build Docker images 
-docker-compose build 
+docker compose build 
