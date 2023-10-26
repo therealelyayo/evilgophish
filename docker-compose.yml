@@ -1,0 +1,74 @@
+version: '3.4'
+
+x-environment:
+  &default-environment
+  ROOT_DOMAIN: example.com
+  EVILGINX3_SUBS: "accounts myaccount"
+  E_ROOT_BOOL: false
+  REDIRECT_URL: https://redirect.com
+  FEED_BOOL: true
+  RID_REPLACEMENT: user_id
+  BL_BOOL: false
+
+services:
+  apache:
+    build:
+      context: .
+      dockerfile: Dockerfile.apache
+    container_name: "evilgophish-apache"
+    ports:
+      - "8443:443"
+    expose:
+      - "443"
+    environment:
+      <<: *default-environment
+    volumes:
+      - ./certs:/app/certs/
+    networks:
+      evilgophish-net:
+        ipv4_address: 172.20.0.3
+
+  evilginx3:
+    build:
+      context: .
+      dockerfile: Dockerfile.evilginx3
+    container_name: "evilgophish-evilginx3"
+    networks:
+      evilgophish-net:
+        ipv4_address: 172.20.0.2
+    expose:
+      - "8443"
+    environment:
+      <<: *default-environment
+    volumes:
+      - shared-data:/app/gophish/
+    depends_on:
+      - gophish
+
+  gophish:
+    build:
+      context: .
+      dockerfile: Dockerfile.gophish
+    container_name: "evilgophish-gophish"
+    networks:
+      evilgophish-net:
+        ipv4_address: 172.20.0.4
+    ports:
+      - "3333:3333"
+    expose:
+      - "8080"
+      - "3333"
+    environment:
+      <<: *default-environment
+    volumes:
+      - shared-data:/app/gophish/
+
+networks:
+  evilgophish-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+volumes:
+  shared-data:

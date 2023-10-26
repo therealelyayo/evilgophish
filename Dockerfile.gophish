@@ -1,0 +1,16 @@
+FROM golang:latest
+
+COPY gophish/ /app/gophish/
+COPY evilfeed/ /app/evilfeed/
+COPY scripts/gophish-setup.sh /app/gophish-setup.sh
+COPY scripts/gophish-entrypoint.sh /app/gophish-entrypoint.sh
+COPY scripts/entrypoint.sh /app/entrypoint.sh
+
+RUN chmod +x /app/gophish-setup.sh
+RUN chmod +x /app/gophish-entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+RUN /app/gophish-setup.sh
+
+WORKDIR /app/gophish
+
+ENTRYPOINT ["/app/entrypoint.sh", "/app/gophish-entrypoint.sh", "./gophish"]

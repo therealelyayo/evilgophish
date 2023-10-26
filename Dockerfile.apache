@@ -1,0 +1,17 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    sed \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod proxy proxy_http proxy_balancer lbmethod_byrequests rewrite ssl
+
+WORKDIR /app
+COPY scripts/apache-entrypoint.sh /app/apache-entrypoint.sh
+COPY conf/ /app/conf/
+COPY certs/ /app/certs/
+
+RUN chmod +x /app/apache-entrypoint.sh
+
+ENTRYPOINT ["/app/apache-entrypoint.sh", "apachectl", "-D", "FOREGROUND"]
