@@ -17,7 +17,7 @@ services:
       dockerfile: Dockerfile.apache
     container_name: "evilgophish-apache"
     ports:
-      - "8443:443"
+      - "443:443"
     expose:
       - "443"
     environment:
