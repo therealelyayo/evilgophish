@@ -147,8 +147,7 @@ Realtime campaign event notifications are handled by a local websocket/http serv
 
 3. When starting `evilginx3`, supply the `-feed` flag to enable the feed. For example:
 
-`./evilginx3 -feed -g /opt/evilgophish/gophish/gophish.db`
-
+./evilginx3 -feed -g /root/evilgophish/gophish/gophish.db
 4. You can begin viewing the live feed at: `http://localhost:1337/`. The feed dashboard will look like below:
 
 ![live-feed](images/live-feed.png)
